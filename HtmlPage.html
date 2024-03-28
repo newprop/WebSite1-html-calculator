@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="jquery-3.7.1.js"></script>
+</head>
+<body>
+
+    <form action="/" method="post">
+
+        <div>
+            <label for="n1">Number 1 :</label>
+            <input type="text" id="n1" placeholder="number 1" />
+        </div>
+        <div>
+            <label for="n2">Number 2 :</label>
+            <input type="text" id="n2" placeholder="number 2" />
+        </div>
+        <div>
+            <fieldset>
+                <legend>Operation :</legend>
+                <label> <input type="radio" name="opt" value="add" /> Add</label><br />
+                <label> <input type="radio" name="opt" value="sub" /> Sub</label><br />
+                <label> <input type="radio" name="opt" value="mul" /> Mul</label><br />
+                <label> <input type="radio" name="opt" value="div" /> Div</label>
+            </fieldset>
+        </div>
+        <div>
+            <button id="btnCalc">Calculate</button>
+        </div>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        var wr = new Worker('JavaScript.js');
+
+        $('#btnCalc').on('click', function (evt) {
+            evt.preventDefault();
+            var data = {
+                Number1: parseFloat($('#n1').val()), // Parse input values as floats
+                Number2: parseFloat($('#n2').val()), // Parse input values as floats
+                Operation: $('[name="opt"]:checked').val(),
+            };
+            wr.postMessage(data);
+        });
+
+        wr.onmessage = function (res) {
+            // Display the result in the "result" div
+            $('#result').text('Result: ' + res.data);
+        };
+    </script>
+</body>
+</html>
